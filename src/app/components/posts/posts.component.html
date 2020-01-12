@@ -1,0 +1,12 @@
+<div class="posts">
+  <button class="addPost base-btn" *ngIf="statusData[0] === 'Admin'" (click)="activeAddPost()">Add Post</button>
+  <app-add-post *ngIf="activeAddPostStatus" (closeActive)="closeAddPost()"></app-add-post>
+  <div class="postsList">
+    <div class="post" *ngFor="let post of posts">
+      <img class="post__image" [src]="post.postImage" alt="">
+      <h3 class="post__title">{{post.postTitle}}</h3>
+      <div class="post__content"><p>{{post.postContent}}</p></div>
+      <button class="base-btn" routerLink="/postItem/{{post.key}}" [id]="post.key">More</button>
+    </div>
+  </div>
+</div>

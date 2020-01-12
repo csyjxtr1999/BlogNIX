@@ -1,0 +1,9 @@
+.brand {
+  font-size: 40px;
+}
+
+.controls {
+  &__btn + &__btn {
+    margin-left: 30px;
+  }
+}

@@ -1,0 +1,10 @@
+<form (submit)="submit($event);" class="add-post" [formGroup]="postData">
+  <div class="close" (click)="closeAddPost()"><span></span><span></span></div>
+  <div *ngIf="!postData.valid">
+    <span>Fields clear</span>
+  </div>
+  <input type="text" formControlName="postImage" name="Image" class="base-input" placeholder="Image link"/>
+  <input type="text" formControlName="postTitle" name="Title" class="base-input" placeholder="Title"/>
+  <input type="text" formControlName="postContent" name="Content" class="base-input" placeholder="Text"/>
+  <button type="submit" class="base-btn">Add Post</button>
+</form>

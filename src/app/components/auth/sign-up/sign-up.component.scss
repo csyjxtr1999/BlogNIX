@@ -1,0 +1,11 @@
+.base-input{
+  padding: 15px 30px;
+  background-color: #fff;
+  display: block;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+}
+
+.base-input.ng-touched.ng-invalid{
+  color: red;
+}

@@ -1,5 +1,5 @@
 <div class="posts">
-  <button class="addPost base-btn" *ngIf="statusData[0] === 'Admin'" (click)="activeAddPost()">Add Post</button>
+  <button class="addPost base-btn" *ngIf="statusData === 'Admin'" (click)="activeAddPost()">Add Post</button>
   <app-add-post *ngIf="activeAddPostStatus" (closeActive)="closeAddPost()"></app-add-post>
   <div class="postsList">
     <div class="post" *ngFor="let post of posts">

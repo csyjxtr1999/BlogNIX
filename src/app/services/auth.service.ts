@@ -3,7 +3,6 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {NgZone} from '@angular/core';
 import {Router} from '@angular/router';
-import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,57 +38,30 @@ export class AuthService {
     this.firebaseAuth.auth.signOut();
   }
 
-  getUsersList() {
-    return this.db.collection('users').snapshotChanges().pipe(map(item => {
-      return item.map(c => ({key: c.payload.newIndex, ...c.payload.doc.data()}));
-    }));
+  loggedIn() {
+    return this.firebaseAuth.authState;
   }
 
-   currentUserStatus(data) {
-    this.getUsersList().subscribe(users => {
-      users.map(user => {
-        const currentEmail = this.firebaseAuth.auth.currentUser.providerData.map(item => {
-          return item.email;
-        });
-        // @ts-ignore
-        if (user.email === currentEmail[0]) {
-          // @ts-ignore
-          data.push(user.status);
-        }
-      });
-    });
+  loggedInValue() {
+    return !!this.firebaseAuth.auth.currentUser;
   }
 
-  currentUserData(data) {
-    this.getUsersList().subscribe(users => {
-      users.map(user => {
-        const currentUser = this.currentUser();
-        // @ts-ignore
-        if (user.email === currentUser[0].email) {
-          // @ts-ignore
-          data = user;
-          console.log(data);
-        }
-      });
-    });
+  currentUserEmail() {
+    return this.firebaseAuth.user;
   }
 
-  currentUser() {
-    return this.firebaseAuth.auth.currentUser.providerData.map(item => {
-      return item;
-    });
+  currentUser(email: any) {
+    return this.db.collection('/users', ref => ref.where('email', '==', email)).snapshotChanges();
   }
 
   navigateToPosts() {
-    return this.firebaseAuth.authState.subscribe(() => {
-      return this.ngZone.run(() => {
+    this.loggedIn().subscribe(() => {
+      this.ngZone.run(() => {
         this.router.navigate(['/posts']);
       });
     });
   }
 
-  loggedIn() {
-    return !!this.firebaseAuth.auth.currentUser;
-  }
+
 
 }

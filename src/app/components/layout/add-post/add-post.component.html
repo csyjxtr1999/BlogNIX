@@ -1,4 +1,4 @@
-<form (submit)="submit($event);" class="add-post" [formGroup]="postData">
+<form (submit)="submit($event); closeAddPost();" class="add-post" [formGroup]="postData">
   <div class="close" (click)="closeAddPost()"><span></span><span></span></div>
   <div *ngIf="!postData.valid">
     <span>Fields clear</span>

@@ -3,6 +3,7 @@ import {AuthService} from '../../services/auth.service';
 import {PostService} from '../../services/post.service';
 import {ActivatedRoute} from '@angular/router';
 import {of} from 'rxjs';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-post',
@@ -11,25 +12,41 @@ import {of} from 'rxjs';
 })
 export class PostComponent implements OnInit {
 
+  /* vars */
+
   posts: any = [];
   currentPostObs: any;
   currentPost: any;
+  postChangeValue: FormGroup;
 
-  constructor(private authService: AuthService, private postService: PostService, private route: ActivatedRoute) { }
+  /* vars-end */
 
-  ngOnInit() {
-    this.getHero();
+  constructor(private authService: AuthService, private postService: PostService, private route: ActivatedRoute) {
+    this.postChangeValue = new FormGroup({
+      postImage: new FormControl('', ),
+      postTitle: new FormControl(''),
+      postContent: new FormControl(''),
+    });
+
   }
 
-  getHero() {
+  ngOnInit() {
+    this.getPost();
+  }
+
+  getPost() {
     const id = +this.route.snapshot.paramMap.get('id');
     this.postService.getAllPosts().subscribe(posts => {
       // @ts-ignore
       this.currentPostObs = of(posts.find(post => post.key === id));
       this.currentPostObs.subscribe(post => {
         this.currentPost = post;
-        console.log(this.currentPost);
       });
     });
   }
+
+  backToPosts() {
+    this.postService.back();
+  }
+
 }

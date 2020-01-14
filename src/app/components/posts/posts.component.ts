@@ -12,22 +12,34 @@ export class PostsComponent implements OnInit {
   /* vars */
 
   users: any = [];
-  statusData: string[] = [];
   posts: any = [];
-  activeAddPostStatus: boolean;
   currentUser: any;
+  statusData: string;
+  activeAddPostStatus: boolean;
 
   /* vars-end */
 
   constructor(private authService: AuthService, private postService: PostService) { }
 
   ngOnInit() {
-    this.curUserStatus();
+    this.getCurrentUser();
     this.getAllPosts();
   }
 
-   curUserStatus() {
-     this.authService.currentUserStatus(this.statusData);
+  getCurrentUser() {
+    this.authService.currentUserEmail().subscribe(item => {
+      item.providerData.forEach(value => {
+        this.currentUserStatus(value);
+      });
+    });
+  }
+  currentUserStatus(value) {
+    this.authService.currentUser(value.email).subscribe(user => {
+      user.forEach(userData => {
+        this.currentUser = userData.payload.doc.data();
+        this.statusData = this.currentUser.status;
+      });
+    });
   }
 
   getAllPosts() {
@@ -44,10 +56,6 @@ export class PostsComponent implements OnInit {
 
   closeAddPost() {
     this.activeAddPostStatus = false;
-  }
-
-  currentUserData() {
-    this.authService.currentUserData(this.currentUser);
   }
 
 }

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../../services/auth.service';
-import {AngularFirestore} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-sign-in',
@@ -18,7 +17,6 @@ export class SignInComponent implements OnInit {
 
   /* vars-end */
 
-
   constructor(private authService: AuthService) {
     this.userProfile = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -27,18 +25,44 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeUser = this.authService.loggedIn();
-    // this.currentUserData();
+    this.loggedInMain();
+    this.getCurrentUser();
+  }
+
+  loggedInMain() {
+  this.authService.loggedIn().subscribe(user => {
+      user !== null ? this.activeUser = true : this.activeUser = false;
+    });
   }
 
   submit(event) {
     event.preventDefault();
-    this.authService.userSignInAuth(this.userProfile.value);
-    this.authService.navigateToPosts();
+    if (this.userProfile.valid) {
+      this.authService.userLogout();
+      this.authService.userSignInAuth(this.userProfile.value);
+      this.authService.navigateToPosts();
+    } else {
+      console.log('Please, enter valid data');
+    }
   }
 
-// currentUserData() {
-//     this.authService.currentUserData(this.currentUser);
-// }
+  getCurrentUser() {
+    this.authService.currentUserEmail().subscribe(item => {
+      item.providerData.forEach(value => {
+        this.currentUserData(value);
+      });
+    });
+  }
+  currentUserData(value) {
+    this.authService.currentUser(value.email).subscribe(user => {
+      user.forEach(userData => {
+        this.currentUser = userData.payload.doc.data();
+        console.log(this.currentUser);
+      });
+    });
+  }
 
+  userLogout() {
+    this.authService.userLogout();
+  }
 }

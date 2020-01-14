@@ -1,4 +1,4 @@
-<form (submit)="submit($event);" class="login" [formGroup]="userProfile" *ngIf="!activeUser">
+<form (submit)="submit($event);" class="login" [formGroup]="userProfile" *ngIf="activeUser === false">
   <h2>SignIn</h2>
   <div *ngIf="!userProfile.valid">
     <span>Please, enter valid data!</span>
@@ -7,3 +7,16 @@
   <input type="password" formControlName="password" name="password" class="base-input"/>
   <button type="submit" class="base-btn">Login</button>
 </form>
+
+<div class="logged" *ngIf="activeUser === true">
+  <span class="logged-user" (waiting)="currentUser.email">Hi, {{currentUser.email}}</span>
+  <button routerLink="/posts">Go to posts</button>
+  <button (click)="userLogout()">Logout</button>
+</div>
+
+<div *ngIf="activeUser !== false && activeUser !== true">
+  <div class="load">
+    <hr/><hr/><hr/><hr/>
+  </div>
+</div>
+
